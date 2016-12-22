@@ -216,8 +216,11 @@ SOCIALACCOUNT_PROVIDERS = \
 
           }
           
+
+# Update database configuration with $DATABASE_URL.
 import dj_database_url
-DATABASES['default'] = dj_database_url.config()
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -225,7 +228,7 @@ ALLOWED_HOSTS = ['*']
 
 DEBUG = False
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+#try:
+#    from .local_settings import *
+#except ImportError:
+#    pass
