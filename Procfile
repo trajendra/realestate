@@ -1,0 +1,1 @@
+web: gunicorn raj_django_realestate.wsgi
