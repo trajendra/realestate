@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load globaltags %}
+
+{% block nav_item %}
+{% proptypes as proptype_list %}
+{% for prop in proptype_list %}
+    <li class="nav-item">
+        <a class="nav-link page-scroll" href="{% url "prop-type-list" slug=prop.slug %} ">{{prop.type}}</a>
+    </li>
+ {% empty %}
+  <p>No Menu yet!</p>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<section id="detail">
+<div class="container">
+  <div class="col-lg-8">
+	<div class="prop-image">
+    	<div class="prop-heading">
+    	<h3><a href="{% url "prop-detail" slug=object.slug %}">{{object.title}}</a></h3>
+    	<ul class="nav navbar-nav pull-xs-right">
+            <li class="nav-item" >
+           {% if user.is_authenticated %}  
+           <a class="btn btn-sm btn-info" data-toggle="modal" title="realestate" href="#InterestModal">Interested?</a>
+           {% else %}
+           <a class="btn btn-sm btn-danger" href="#" title="...to submit your interest" data-toggle="popover" data-trigger="hover" 
+            data-placement="top" data-content="Please go Login or Signup">Interested? </a>
+           {% endif %}
+           </li>
+        </ul>
+    	
+    	</div>
+	{%  if object.cover %} <img src="{{object.cover.url}}" alt="" style="max-width:100%; height:auto"/> {% endif %}
+	</div>
+						
+    <div class="container-fluid">
+        <br/>{% if prop_ref %}
+        <h6 class="text-primary text-xs-center text-uppercase">Other Views of Property</h6><br/>
+        <div class="row">
+            <div class="col-xs-10 offset-xs-1">
+                <div class="row">
+                    
+                    {% for ref in prop_ref %}
+                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 text-xs-center">
+                        <div class="card">
+                            <img src="{{ ref.image.url|safe }}" class="card-img img-fluid">
+                            <div class="card-img-overlay">
+                                <h4 class="card-title text-xs-center">
+                                    <a class="text-light" href="#galleryModal" data-toggle="modal" data-src="{{ ref.image.url|safe }}">view</a>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div> {% endif %}
+    </div>
+    <br>
+
+	<p>
+		 {{ object.desc }}
+	</p>
+	<div class="bottom-property">
+		<ul class="meta-property" style="float:left; list-style:None; padding:0;">
+			<li style="float:left;"><i class="icon-calendar"></i><a href="#">|| Date posed: Mar 23, 2013 | </a></li>
+			<li style="float:left;"><i class="icon-user"></i><a href="#">| By: Admin | </a></li>
+			<li style="float:left;"><i class="icon-folder-open"></i><a href="#">| Tag: Property | </a></li>
+			<li style="float:left;"><i class="icon-comments"></i><a href="#"> | 4 Comments || </a></li>
+		</ul>
+	</div>
+
+  </div> 
+	  <div class="col-lg-4">
+	   <aside class="right-sidebar">
+		<div class="widget">
+	      <h5 class="widgetheading">Related Entries</h5>
+	      <div class="container wow fadeInUp">
+	     
+              <div class="card-group" style="width: 120%;">
+            {% if related_entries %}  {% for entry in related_entries %}
+            <!-- card -->
+            <div class="card" style="display:flex;">
+                
+                {% if entry.cover %}
+                <img class="card-img-top img-fluid" style="max-width:50%" src="{{entry.cover.url|safe}}" alt="{{entry.title}}">
+                {% else %}
+                
+                <h5 class="text-cs-center" style="padding:40px 25px 25px 15px;">{{entry.type}} </h5>
+                {% endif %}
+                
+                
+                <div class="card-block" >
+                    <h6 class="card-title"><a href="/{{entry.slug}}" class="text-cs-center"> {{entry.title}} </a></h6>
+                    <p class="card-text"><small> {{entry.desc}}</small></p>
+                </div>
+            </div> 
+          {% endfor %}
+          {% endif %}
+             
+        </div>
+          </div>
+		</div>
+       </aside>
+	  </div>
+	 </div>
+	 
+	
+   </section>
+{% endblock %}
+{% block extra-modal %}
+<div id="InterestModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-xs-center">
+                <h4 class="text-xs-center">Interest Submission
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </h4>
+                <br/>
+                <div class="container">
+                <form id="interestform" method="post" action="{% url "listing-interest" slug=object.slug %}">{% csrf_token %}
+                  <div class="form-group row">
+                  <div class="offset-sm-1 col-sm-10 offset-sm-1">
+                    <textarea class="form-control" rows="4" id="id_message" name="message" placeholder="message" type="textarea">
+                    </textarea>
+                    
+                  </div>
+                 </div>
+                 <div class="form-group row">
+                  <div class="offset-sm-1 col-sm-10 offset-sm-1">
+                    <input class="form-control" id="id_contact_no" name="contact_no" placeholder="9999999999" type="text">  
+                  </div>
+                 </div>
+                 <div class="form-group row">
+                  <div class="offset-sm-1 col-sm-10 offset-sm-1">
+                   <input type="hidden" name="next" value="" />
+                   <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </div>
+                
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block login_next_page_url %} 
+     <input type="hidden" name="next" value="/{{object.slug}}" />
+{% endblock %} 

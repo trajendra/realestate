@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load globaltags %}
+
+{% block nav_item %}
+{% proptypes as proptype_list %}
+{% for prop in proptype_list %}
+    <li class="nav-item">
+        <a class="nav-link page-scroll" href="/type/{{prop.slug}}">{{prop.type}}</a>
+    </li>
+ {% empty %}
+  <p>No Menu yet!</p>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+{% block listings %}
+    <section id="{{prop.type}}" >
+       <div class="container wow fadeInUp">
+        <h2>{{type}} Deals</h2> <hr/>
+        <div class="card-group"> 
+ 
+    {% if object_list %}
+    {% for object in object_list %}       
+
+    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 text-xs-center">
+       <div class="card">
+           {% if object.cover %} <img class="card-img-top img-fluid" src="{{object.cover.url|safe}}" alt="{{ object.title }}"> {% endif %}
+           <div class="card-block">
+               <h5 class="card-title"><a href="{% url "prop-detail" slug=object.slug %}">{{object.title}} </a></h5>
+               <p class="card-text"><small>{{object.desc}}<br/>
+               Deal Price:${{object.vendor_requested_price}}</small></p>
+           </div>
+       </div>
+       </div> 
+   {% endfor %}{% endif %}
+    </div>
+    </div>
+    </section>
+{% endblock %}
+{% endblock %}
+
+
+
+
+
