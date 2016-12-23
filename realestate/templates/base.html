@@ -7,12 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="infypath">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" />
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.1/animate.min.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <link rel="stylesheet" href="{% static "realestate/css/styles.css" %}"/>
     <link rel="stylesheet" href="{% static "realestate/css/carousel.css" %}"/>
+
   </head>
   {% block extra-styles %} {% endblock %}
 <body class="bg-faded">
@@ -94,6 +99,7 @@
 <br/>
 {% block listings %}  {% endblock %}
 <section id="last">
+    
     <div class="container">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 text-xs-center">
@@ -272,5 +278,14 @@
             $('[data-toggle="popover"]').popover();   
         });
     </script>
+    
+    <script>
+    $(document).ready(function(){
+    	$("#stars-default").rating();
+    	$("#stars-green").rating('create',{coloron:'green',onClick:function(){ alert('rating is ' + this.attr('data-rating')); }});
+    	$("#stars-herats").rating('create',{coloron:'red',limit:10,glyph:'glyphicon-heart'});	
+    });
+    </script>
+
   </body>
 </html>

@@ -33,9 +33,13 @@
     	</div>
 	{%  if object.cover %} <img src="{{object.cover.url}}" alt="" style="max-width:100%; height:auto"/> {% endif %}
 	</div>
-						
+	<span class="pull-right" style="font-size:12px;">User Rating :  &nbsp;&nbsp; 
+	 <div id="stars-default" class="pull-right" data-rating="4"><input type="hidden" value="hidden" name="rating"/></div>
+	</span>
     <div class="container-fluid">
+        
         <br/>{% if prop_ref %}
+        
         <h6 class="text-primary text-xs-center text-uppercase">Other Views of Property</h6><br/>
         <div class="row">
             <div class="col-xs-10 offset-xs-1">
@@ -95,7 +99,14 @@
                 
                 <div class="card-block" >
                     <h6 class="card-title"><a href="/{{entry.slug}}" class="text-cs-center"> {{entry.title}} </a></h6>
-                    <p class="card-text"><small> {{entry.desc}}</small></p>
+                    <p class="card-text"><small> 
+                   
+                Room Count : {{object.room_count}} <br/>
+                Deal : ${{object.vendor_requested_price}}<br/>
+               Rating:
+               <a href="/#rating"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span>
+                </a>
+                    </small></p>
                 </div>
             </div> 
           {% endfor %}
