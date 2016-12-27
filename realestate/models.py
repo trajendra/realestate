@@ -7,6 +7,10 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.forms import ModelForm
 
+from localflavor.in_.forms import INPhoneNumberField,INStateField,INZipCodeField
+
+from cloudinary.models import CloudinaryField
+
 import datetime
 # Create your models here.
 
@@ -83,25 +87,34 @@ class PropQuerySet(models.QuerySet):
         return self.filter(is_active=True)
 
 class Property(TimeStampedModel):
+    LISTED, PENDING, SOLD = range(3)
+    STATUS_CHOICES = (
+        (LISTED,'Listed'),
+        (PENDING,'Pending'),
+        (SOLD,'Sold'),
+        )
     agent = models.ForeignKey(Agent,on_delete=models.SET(get_sentinel_user),related_name="property_agent")
     type = models.ForeignKey(Property_Type,on_delete=models.SET(get_sentinel_user),related_name="ref_prop_type")
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200,unique=True)
-    cover = models.ImageField(upload_to=get_image_filename,
-                              null=True,
-                              blank=True,
-                              help_text='Optional cover for property')
-    owner = models.CharField(max_length=100)
+    #cover = models.ImageField(upload_to=get_image_filename, null=True, blank=True,help_text='Optional cover for property')
+    cover = CloudinaryField('image',null=True, blank=True,help_text='Optional cover for property')
+    owner = models.CharField(max_length=100,blank=True, null=True)
+    owner_contact = INPhoneNumberField()
     desc = models.TextField(blank=True, null=True)
     other_details = models.TextField(blank=True,null=True)
-    address = models.TextField()
+    address = models.TextField(blank=True, null=True)
+    city = models.CharField(max_length=255,blank=True, null=True)
+    state = INStateField()
+    zip_code = INZipCodeField()
     room_count = models.PositiveSmallIntegerField(blank=True, null=True)
     vendor_requested_price = models.DecimalField(max_digits=20,decimal_places=2,blank=True, null=True)
     buyer_offered_price = models.DecimalField(max_digits=20,decimal_places=2,blank=True,null=True)
     agreed_selling_price = models.DecimalField(max_digits=20,decimal_places=2,blank=True, null=True)
-    tags = models.ManyToManyField('Tag')
+    tags = models.ManyToManyField('Tag',blank=True)
     keywords = models.CharField(max_length=200, null=True, blank=True,help_text='Keywords sparate by comma.')
     meta_description = models.TextField(null=True, blank=True)
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES,null=True, blank=True)
     publish = models.BooleanField(default=True)
     objects = PropQuerySet.as_manager()
     
@@ -131,10 +144,19 @@ class Property(TimeStampedModel):
 
 class Property_Ref(TimeStampedModel):
     property = models.ForeignKey(Property,related_name="property_ref")
-    image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
+    #image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
+    image = CloudinaryField('image')
     
-    def __str__(self):
-        return self.property.title
+    #def __str__(self):
+    #    return self.property.title
+    
+    """ Informative name for mode """
+    def __unicode__(self):
+        try:
+            public_id = self.image.public_id
+        except AttributeError:
+            public_id = ''
+        return "Photo <%s:%s>" % (self.property.title, public_id)
     
 class Visitor(TimeStampedModel):
     property = models.ForeignKey(Property, related_name='property_visitor')
@@ -149,10 +171,8 @@ class Visitor(TimeStampedModel):
         ordering = ['-created']
 
 class Property_Promo(TimeStampedModel):
-    header = models.ImageField(upload_to='gallery/brand/header',
-                               null=True,
-                               blank=True,
-                               help_text="Upload header image for brand")
+    #header = models.ImageField(upload_to='gallery/brand/header',null=True,blank=True,help_text="Upload header image for brand")
+    header = CloudinaryField('promo',null=True,blank=True,help_text="Upload header image for brand")                           
     headline = models.CharField(max_length=300, null=True, blank=True)
     desc = models.TextField(null=True,blank=True)
     ref_url = models.ForeignKey(Property,blank=True,null=True)

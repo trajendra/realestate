@@ -18,9 +18,11 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from django.conf.urls.static import static
 #from django.contrib.auth.views import login,logout
+import realestate.views as prop_ref
 
 urlpatterns = [
-    
+        # URL for uploading an image
+    url(r'^upload/$', prop_ref.upload),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', admin.site.urls),
     #url(r'^login/$', login, name='login'),

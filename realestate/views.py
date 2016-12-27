@@ -5,9 +5,22 @@ from django.views.generic.edit import CreateView,UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+from cloudinary.forms import cl_init_js_callbacks      
+from .models import Property_Ref
+from .forms import Property_RefForm
 from realestate.models import *
 
 # Create your views here.
+
+def upload(request):
+    context = dict( backend_form = Property_RefForm())
+    if request.method == 'POST':
+        form = Property_RefForm(request.POST, request.FILES)
+        context['posted'] = form.instance
+        if form.is_valid():
+            form.save()
+    return render(request, 'property_ref_upload.html', context)
+
 class PropList(ListView):
     model = Property
     template_name = "realestate/index.html"
@@ -63,6 +76,8 @@ class ListingInterest(CreateView):
         form.instance.listing = get_object_or_404(Property,slug=listing_slug)
         form.instance.created = self.request.user
         return super(ListingInterest, self).form_valid(form)
+        
+
         
     
     

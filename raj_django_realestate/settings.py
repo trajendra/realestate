@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     
     'widget_tweaks',
     'captcha',
+    'cloudinary',
+    'localflavor',
     
     'realestate',
     'bootstrapform',
@@ -167,6 +169,9 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 
 MEDIA_URL = '/static/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
+
+# Temporary folder for upload, in this example is the subfolder 'upload'
+UPLOAD_TO = os.path.join(BASE_DIR, 'static/media/upload')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True

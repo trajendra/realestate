@@ -1,5 +1,5 @@
 from django.conf.urls import url,include
-from realestate.views import PropList,PropDetail,PropTypeList,ListingInterest
+from realestate.views import PropList,PropDetail,PropTypeList,ListingInterest,upload
 from django.contrib import admin
 
 urlpatterns = [

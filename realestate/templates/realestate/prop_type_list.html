@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load globaltags %}
+{% load cloudinary %}
 
 {% block nav_item %}
 {% proptypes as proptype_list %}
@@ -24,11 +25,23 @@
 
     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 text-xs-center">
        <div class="card">
-           {% if object.cover %} <img class="card-img-top img-fluid" src="{{object.cover.url|safe}}" alt="{{ object.title }}"> {% endif %}
+           {% if object.cover %} 
+           <!--<img class="card-img-top img-fluid" src="" alt="{{ object.title }}">-->
+           {% cloudinary object.cover width=250 height=175 crop="fit" class="card-img-top img-fluid" %}
+           {% endif %}
+           
            <div class="card-block">
                <h5 class="card-title"><a href="{% url "prop-detail" slug=object.slug %}">{{object.title}} </a></h5>
-               <p class="card-text"><small>{{object.desc}}<br/>
-               Deal Price:${{object.vendor_requested_price}}</small></p>
+               <small>
+               <ul class="text-xs-left">
+               <li>Room Count : {{object.room_count}}</li>
+               <li>Deal Price : ${{object.vendor_requested_price}}</li>
+               </ul>
+               <p>User Rating:
+                <a href="/#rating"><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-star"></span>
+                </a>
+              </p>
+               </small>
            </div>
        </div>
        </div> 

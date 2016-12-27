@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load globaltags %}
+{% load cloudinary %} 
 
 {% block nav_item %}
 {% proptypes as proptype_list %}
@@ -31,7 +32,10 @@
         </ul>
     	
     	</div>
-	{%  if object.cover %} <img src="{{object.cover.url}}" alt="" style="max-width:100%; height:auto"/> {% endif %}
+	
+	<!--<img src="" alt="" style="max-width:100%; height:auto"/> -->
+
+	{% cloudinary object.cover width=800 height=800 crop="fit" style="max-width:100%; height:auto"%}
 	</div>
 	<span class="pull-right" style="font-size:12px;">User Rating :  &nbsp;&nbsp; 
 	 <div id="stars-default" class="pull-right" data-rating="4"><input type="hidden" value="hidden" name="rating"/></div>
@@ -48,7 +52,8 @@
                     {% for ref in prop_ref %}
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 text-xs-center">
                         <div class="card">
-                            <img src="{{ ref.image.url|safe }}" class="card-img img-fluid">
+                            <!--<img class="card-img img-fluid" src="">-->
+                            {% cloudinary ref.image width=200 height=200 crop="fit" class="card-img img-fluid" %}
                             <div class="card-img-overlay">
                                 <h4 class="card-title text-xs-center">
                                     <a class="text-light" href="#galleryModal" data-toggle="modal" data-src="{{ ref.image.url|safe }}">view</a>
@@ -89,12 +94,14 @@
             <!-- card -->
             <div class="card" style="display:flex;">
                 
-                {% if entry.cover %}
-                <img class="card-img-top img-fluid" style="max-width:50%" src="{{entry.cover.url|safe}}" alt="{{entry.title}}">
-                {% else %}
+               
+                <!--<img class="card-img-top img-fluid" style="max-width:50%" src="" alt="">-->
+           
                 
-                <h5 class="text-cs-center" style="padding:40px 25px 25px 15px;">{{entry.type}} </h5>
-                {% endif %}
+                {% cloudinary entry.cover width=150 height=150 crop="fit" alt=entry.type class="card-img-top img-fluid" %}
+                
+                
+               
                 
                 
                 <div class="card-block" >
